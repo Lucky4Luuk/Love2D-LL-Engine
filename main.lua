@@ -31,6 +31,10 @@ function modelClass.new(x,y,z,modelpath)
 	--Set up variables
 	self.mp = "models/" .. modelpath
 	
+	self.rotX = 0
+	self.rotY = 0
+	self.rotZ = 0
+	
 	self.x = x
 	self.y = y
 	self.z = z
@@ -61,6 +65,7 @@ function modelClass:load()
 		elseif string.sub(line,1,2) == "f " then
 			local vline = splitstring(line:sub(3)," ")
 			table.insert(self.faces,{vline[1],vline[2],vline[3]})
+			--print("F: "..vline[1].."; "..vline[2].."; "..vline[3])
 		elseif string.sub(line,1,2) == "vn " then
 			local vline = splitstring(line:sub(3)," ")
 			table.insert(self.vnormals,{vline[1],vline[2],vline[3]})
@@ -68,10 +73,69 @@ function modelClass:load()
 	end
 	
 	table.sort(self.vertices,cDistToCam)
-	for _,v in ipairs(self.vertices) do
-		print(v[4])
-	end
+	--for _,v in ipairs(self.vertices) do
+		--print(v[4])
+	--end
 	--return self.modeldata
+end
+
+function modelClass:drawFaces()
+	for _,f in ipairs(self.faces) do
+		local v1 = tonumber(splitstring(f[1],"//")[1])
+		local v2 = tonumber(splitstring(f[2],"//")[1])
+		local v3 = tonumber(splitstring(f[3],"//")[1])
+		
+		local x1 = self.vertices[v1][1]*50
+		local y1 = self.vertices[v1][2]*50
+		local z1 = self.vertices[v1][3]/2
+		
+		x1 = rotateY(x1,z1,self.rotY)[1]
+		z1 = rotateY(x1,z1,self.rotY)[2]
+		
+		local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
+		xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
+		x1 = xyz1[1]
+		y1 = xyz1[2]
+		z1 = xyz1[3]
+		
+		local sx1 = x1/z1 + WIDTH/2
+		local sy1 = y1/z1 + HEIGHT/2
+		
+		local x2 = self.vertices[v2][1]*50
+		local y2 = self.vertices[v2][2]*50
+		local z2 = self.vertices[v2][3]/2
+		
+		x2 = rotateY(x2,z2,self.rotY)[1]
+		z2 = rotateY(x2,z2,self.rotY)[2]
+		
+		local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
+		xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
+		x2 = xyz2[1]
+		y2 = xyz2[2]
+		z2 = xyz2[3]
+		
+		local sx2 = x2/z2 + WIDTH/2
+		local sy2 = y2/z2 + HEIGHT/2
+		
+		local x3 = self.vertices[v3][1]*50
+		local y3 = self.vertices[v3][2]*50
+		local z3 = self.vertices[v3][3]/2
+		
+		x3 = rotateY(x3,z3,self.rotY)[1]
+		z3 = rotateY(x3,z3,self.rotY)[2]
+		
+		local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
+		xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
+		x3 = xyz3[1]
+		y3 = xyz3[2]
+		z3 = xyz3[3]
+		
+		local sx3 = x3/z3 + WIDTH/2
+		local sy3 = y3/z3 + HEIGHT/2
+		
+		love.graphics.setColor(255,0,0)
+		love.graphics.polygon("fill",sx1,sy1,sx2,sy2,sx3,sy3)
+	end
 end
 
 --Functions
@@ -94,9 +158,10 @@ function splitstring(inputstr, sep)
 end
 
 function file_exists(file)
-	local f = io.open(file, "rb")
-	if f then f:close() end
-	return f ~= nil
+	--local f = io.open(file, "rb")
+	--if f then f:close() end
+	--return f ~= nil
+	return love.filesystem.isFile(file)
 end
 
 function lines_from(file)
@@ -105,7 +170,7 @@ function lines_from(file)
 		return {}
 	end
 	local flines = {}
-	for line in io.lines(file) do
+	for line in love.filesystem.lines(file) do
 		flines[#flines + 1] = line
 	end
 	--print("flines:")
@@ -153,12 +218,13 @@ local modeltest = modelClass.new(0,0,5,"cube.obj")
 
 function love.load()
 	modeltest:load()
+	--modeltest:drawFaces()
 end
 
 function love.update(dt)
-
+	
 end
 
 function love.draw()
-
+	modeltest:drawFaces()
 end

@@ -109,7 +109,7 @@ function modelClass:drawFaces()
 			local z1 = self.vertices[v1][3]/5
 			
 			x1 = rotateY(x1,z1,self.rotDY)[1]
-			z1 = rotateY(x1,z1,self.rotDY)[2]
+			y1 = rotateY(x1,z1,self.rotDY)[2]
 			
 			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
 			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
@@ -125,7 +125,7 @@ function modelClass:drawFaces()
 			local z2 = self.vertices[v2][3]/5
 			
 			x2 = rotateY(x2,z2,self.rotDY)[1]
-			z2 = rotateY(x2,z2,self.rotDY)[2]
+			y2 = rotateY(x2,z2,self.rotDY)[2]
 			
 			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
 			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
@@ -141,7 +141,7 @@ function modelClass:drawFaces()
 			local z3 = self.vertices[v3][3]/5
 			
 			x3 = rotateY(x3,z3,self.rotDY)[1]
-			z3 = rotateY(x3,z3,self.rotDY)[2]
+			y3 = rotateY(x3,z3,self.rotDY)[2]
 			
 			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
 			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
@@ -160,7 +160,7 @@ function modelClass:drawFaces()
 			local z1 = self.vertices[v1][3]/5
 			
 			x1 = rotateY(x1,z1,self.rotDY)[1]
-			z1 = rotateY(x1,z1,self.rotDY)[2]
+			y1 = rotateY(x1,z1,self.rotDY)[2]
 			
 			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
 			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
@@ -176,7 +176,7 @@ function modelClass:drawFaces()
 			local z2 = self.vertices[v2][3]/5
 			
 			x2 = rotateY(x2,z2,self.rotDY)[1]
-			z2 = rotateY(x2,z2,self.rotDY)[2]
+			y2 = rotateY(x2,z2,self.rotDY)[2]
 			
 			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
 			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
@@ -192,7 +192,7 @@ function modelClass:drawFaces()
 			local z3 = self.vertices[v3][3]/5
 			
 			x3 = rotateY(x3,z3,self.rotDY)[1]
-			z3 = rotateY(x3,z3,self.rotDY)[2]
+			y3 = rotateY(x3,z3,self.rotDY)[2]
 			
 			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
 			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
@@ -208,7 +208,7 @@ function modelClass:drawFaces()
 			local z4 = self.vertices[v4][3]/5
 			
 			x4 = rotateY(x3,z3,self.rotDY)[1]
-			z4 = rotateY(x3,z3,self.rotDY)[2]
+			y4 = rotateY(x3,z3,self.rotDY)[2]
 			
 			local xyz4 = toWorldSpace(self.x,self.y,self.z,x4,y4,z4)
 			xyz4 = toCamSpace(xyz4[1],xyz4[2],xyz4[3])
@@ -232,7 +232,7 @@ function modelClass:drawVertices()
 		local z = v[3]/5
 		
 		x = rotateY(x,z,self.rotY)[1]
-		z = rotateY(x,z,self.rotY)[2]
+		y = rotateY(x,z,self.rotY)[2]
 		
 		local xyz = toWorldSpace(self.x,self.y,self.z,x,y,z)
 		xyz = toCamSpace(xyz[1],xyz[2],xyz[3])

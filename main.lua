@@ -5,6 +5,9 @@ BGCOLOR = {0,0,0}
 CAMX = 0
 CAMY = 0
 CAMZ = 0
+CAMROTX = 0
+CAMROTY = 0
+CAMROTZ = 0
 camspeed = 1
 FOV = 70
 ASPECT = 16/9
@@ -13,6 +16,7 @@ zFAR = 1000
 zfactor = 5
 SLIDER = 0
 SLIDERSPEED = math.pi/24
+mode = 0
 
 LIGHTDIR = {0,-1,0}
 
@@ -88,6 +92,17 @@ function modelClass:load()
 	--return self.modeldata
 end
 
+function modelClass:update()
+	for _,v in ipairs(self.vertices) do
+		local xyz = toWorldSpace(self.x,self.y,self.z,v[1],v[2],v[3])
+		xyz = toCamSpace(xyz[1],xyz[2],xyz[3])
+		local DTC = math.sqrt(xyz[1]*xyz[1] + xyz[2]*xyz[2] + xyz[3]*xyz[3])
+		self.vertices[_][4] = DTC
+	end
+	
+	table.sort(self.vertices,cDistToCam)
+end
+
 function modelClass:setRotY(r)
 	self.rotDY = r - self.rotY
 	self.rotY = r
@@ -109,8 +124,9 @@ function modelClass:drawFaces()
 			local y1 = self.vertices[v1][2]*50
 			local z1 = self.vertices[v1][3]/zfactor
 			
-			x1 = rotateY(x1,z1,self.rotDY)[1]
-			z1 = rotateY(x1,z1,self.rotDY)[2]
+			local xz1 = rotateY(x1,z1,self.rotY)
+			x1 = xz1[1]
+			z1 = xz1[2]
 			
 			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
 			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
@@ -125,8 +141,9 @@ function modelClass:drawFaces()
 			local y2 = self.vertices[v2][2]*50
 			local z2 = self.vertices[v2][3]/zfactor
 			
-			x2 = rotateY(x2,z2,self.rotDY)[1]
-			z2 = rotateY(x2,z2,self.rotDY)[2]
+			local xz2 = rotateY(x2,z2,self.rotY)
+			x2 = xz2[1]
+			z2 = xz2[2]
 			
 			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
 			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
@@ -141,8 +158,9 @@ function modelClass:drawFaces()
 			local y3 = self.vertices[v3][2]*50
 			local z3 = self.vertices[v3][3]/zfactor
 			
-			x3 = rotateY(x3,z3,self.rotDY)[1]
-			z3 = rotateY(x3,z3,self.rotDY)[2]
+			local xz3 = rotateY(x3,z3,self.rotY)
+			x3 = xz3[1]
+			z3 = xz3[2]
 			
 			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
 			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
@@ -160,8 +178,9 @@ function modelClass:drawFaces()
 			local y1 = self.vertices[v1][2]*50
 			local z1 = self.vertices[v1][3]/zfactor
 			
-			x1 = rotateY(x1,z1,self.rotDY)[1]
-			z1 = rotateY(x1,z1,self.rotDY)[2]
+			local xz1 = rotateY(x1,z1,self.rotY)
+			x1 = xz1[1]
+			z1 = xz1[2]
 			
 			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
 			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
@@ -176,8 +195,9 @@ function modelClass:drawFaces()
 			local y2 = self.vertices[v2][2]*50
 			local z2 = self.vertices[v2][3]/zfactor
 			
-			x2 = rotateY(x2,z2,self.rotDY)[1]
-			z2 = rotateY(x2,z2,self.rotDY)[2]
+			local xz2 = rotateY(x2,z2,self.rotY)
+			x2 = xz2[1]
+			z2 = xz2[2]
 			
 			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
 			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
@@ -192,8 +212,9 @@ function modelClass:drawFaces()
 			local y3 = self.vertices[v3][2]*50
 			local z3 = self.vertices[v3][3]/zfactor
 			
-			x3 = rotateY(x3,z3,self.rotDY)[1]
-			z3 = rotateY(x3,z3,self.rotDY)[2]
+			local xz3 = rotateY(x3,z3,self.rotY)
+			x3 = xz3[1]
+			z3 = xz3[2]
 			
 			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
 			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
@@ -206,10 +227,11 @@ function modelClass:drawFaces()
 			
 			local x4 = self.vertices[v4][1]*50
 			local y4 = self.vertices[v4][2]*50
-			local z4 = self.vertices[v4][3]/5
+			local z4 = self.vertices[v4][3]/zfactor
 			
-			x4 = rotateY(x3,z3,self.rotDY)[1]
-			z4 = rotateY(x3,z3,self.rotDY)[2]
+			local xz4 = rotateY(x3,z3,self.rotY)
+			x4 = xz4[1]
+			z4 = xz4[2]
 			
 			local xyz4 = toWorldSpace(self.x,self.y,self.z,x4,y4,z4)
 			xyz4 = toCamSpace(xyz4[1],xyz4[2],xyz4[3])
@@ -243,29 +265,37 @@ function modelClass:drawVertices()
 		y = xyz[2]
 		z = xyz[3]
 		
-		local sx = x/z+WIDTH/2
-		local sy = y/z+HEIGHT/2
-		
-		love.graphics.setColor(255,0,0)
-		love.graphics.rectangle("fill",sx,sy,10/v[4],10/v[4])
+		if z > zNEAR then
+			local sx = x/z+WIDTH/2
+			local sy = y/z+HEIGHT/2
+			
+			love.graphics.setColor(255,0,0)
+			love.graphics.rectangle("fill",sx,sy,10-(v[4]/200),10-(v[4]/200))
+			--love.graphics.setColor(255,255,255)
+			--love.graphics.print(z,sx,sy)
+		end
 	end
 end
 
 --Functions
 function moveCamForward(speed)
-	CAMZ = CAMZ + speed/50
+	CAMX = CAMX + math.sin(CAMROTY) * (speed*5)
+	CAMZ = CAMZ + math.cos(CAMROTY) * (speed/50)
 end
 
 function moveCamBackwards(speed)
-	CAMZ = CAMZ - speed/50
+	CAMX = CAMX - math.sin(CAMROTY) * (speed*5)
+	CAMZ = CAMZ - math.cos(CAMROTY) * (speed/50)
 end
 
 function moveCamRight(speed)
-	CAMX = CAMX + speed*5
+	CAMX = CAMX + math.cos(-CAMROTY) * (speed*5)
+	CAMZ = CAMZ + math.sin(-CAMROTY) * (speed/50)
 end
 
 function moveCamLeft(speed)
-	CAMX = CAMX - speed*5
+	CAMX = CAMX - math.cos(-CAMROTY) * (speed*5)
+	CAMZ = CAMZ - math.sin(-CAMROTY) * (speed/50)
 end
 
 function moveCamUp(speed)
@@ -282,6 +312,14 @@ end
 
 function SLIDERMINUS()
 	SLIDER = SLIDER - math.rad(5)
+end
+
+function rotateCamLeft(degrees)
+	CAMROTY = CAMROTY - math.rad(degrees)
+end
+
+function rotateCamRight(degrees)
+	CAMROTY = CAMROTY + math.rad(degrees)
 end
 
 function cDistToCam(a,b)
@@ -334,7 +372,16 @@ function toWorldSpace(x,y,z,vx,vy,vz)
 end
 
 function toCamSpace(vx,vy,vz)
-	return {vx-CAMX,vy-CAMY,vz-CAMZ}
+	local cx = vx-CAMX
+	local cy = vy-CAMY
+	local cz = vz-CAMZ
+	
+	local rxz = rotateY(cx,cz,CAMROTY)
+	local rx = rxz[1]
+	local ry = cy
+	local rz = rxz[2]
+	
+	return {rx,ry,rz}
 end
 
 function rotateX(y,z,r)
@@ -380,11 +427,22 @@ function playerinput()
 	if love.keyboard.isDown("q") then
 		moveCamDown(1)
 	end
-	if love.keyboard.isDown("right") then
+	if love.keyboard.isDown("l") then
 		SLIDERPLUS()
 	end
-	if love.keyboard.isDown("left") then
+	if love.keyboard.isDown("j") then
 		SLIDERMINUS()
+	end
+	if love.keyboard.isDown("left") then
+		rotateCamLeft(1)
+	end
+	if love.keyboard.isDown("right") then
+		rotateCamRight(1)
+	end
+	if love.keyboard.isDown("0") then
+		mode = 0
+	elseif love.keyboard.isDown("1") then
+		mode = 1
 	end
 end
 
@@ -399,13 +457,20 @@ end
 function love.update(dt)
 	playerinput()
 	modeltest:setRotY(SLIDER)
+	modeltest:update()
 end
 
 function love.draw()
 	--modeltest:drawFaces()
-	modeltest:drawVertices()
+	if mode == 0 then
+		modeltest:drawVertices()
+	elseif mode == 1 then
+		modeltest:drawFaces()
+	end
 	
 	--Debug
 	love.graphics.setColor(255,255,255)
-	love.graphics.print(modeltest:getRotation())
+	love.graphics.print("Camera position: "..CAMX.."; "..CAMY.."; "..CAMZ..";",10,10)
+	love.graphics.print("Camera rotation: "..CAMROTX.."; "..CAMROTY.."; "..CAMROTZ..";",10,40)
+	love.graphics.print("FPS: "..tostring(love.timer.getFPS()),WIDTH-60,10)
 end

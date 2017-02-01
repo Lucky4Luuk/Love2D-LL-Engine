@@ -106,10 +106,10 @@ function modelClass:drawFaces()
 		if v4 == nil then
 			local x1 = self.vertices[v1][1]*50
 			local y1 = self.vertices[v1][2]*50
-			local z1 = self.vertices[v1][3]/5
+			local z1 = self.vertices[v1][3]/2
 			
 			x1 = rotateY(x1,z1,self.rotDY)[1]
-			y1 = rotateY(x1,z1,self.rotDY)[2]
+			z1 = rotateY(x1,z1,self.rotDY)[2]
 			
 			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
 			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
@@ -122,10 +122,10 @@ function modelClass:drawFaces()
 			
 			local x2 = self.vertices[v2][1]*50
 			local y2 = self.vertices[v2][2]*50
-			local z2 = self.vertices[v2][3]/5
+			local z2 = self.vertices[v2][3]/2
 			
 			x2 = rotateY(x2,z2,self.rotDY)[1]
-			y2 = rotateY(x2,z2,self.rotDY)[2]
+			z2 = rotateY(x2,z2,self.rotDY)[2]
 			
 			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
 			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
@@ -138,10 +138,10 @@ function modelClass:drawFaces()
 			
 			local x3 = self.vertices[v3][1]*50
 			local y3 = self.vertices[v3][2]*50
-			local z3 = self.vertices[v3][3]/5
+			local z3 = self.vertices[v3][3]/2
 			
 			x3 = rotateY(x3,z3,self.rotDY)[1]
-			y3 = rotateY(x3,z3,self.rotDY)[2]
+			z3 = rotateY(x3,z3,self.rotDY)[2]
 			
 			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
 			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
@@ -157,10 +157,10 @@ function modelClass:drawFaces()
 		else
 			local x1 = self.vertices[v1][1]*50
 			local y1 = self.vertices[v1][2]*50
-			local z1 = self.vertices[v1][3]/5
+			local z1 = self.vertices[v1][3]/2
 			
 			x1 = rotateY(x1,z1,self.rotDY)[1]
-			y1 = rotateY(x1,z1,self.rotDY)[2]
+			z1 = rotateY(x1,z1,self.rotDY)[2]
 			
 			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
 			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
@@ -173,10 +173,10 @@ function modelClass:drawFaces()
 			
 			local x2 = self.vertices[v2][1]*50
 			local y2 = self.vertices[v2][2]*50
-			local z2 = self.vertices[v2][3]/5
+			local z2 = self.vertices[v2][3]/2
 			
 			x2 = rotateY(x2,z2,self.rotDY)[1]
-			y2 = rotateY(x2,z2,self.rotDY)[2]
+			z2 = rotateY(x2,z2,self.rotDY)[2]
 			
 			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
 			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
@@ -189,10 +189,10 @@ function modelClass:drawFaces()
 			
 			local x3 = self.vertices[v3][1]*50
 			local y3 = self.vertices[v3][2]*50
-			local z3 = self.vertices[v3][3]/5
+			local z3 = self.vertices[v3][3]/2
 			
 			x3 = rotateY(x3,z3,self.rotDY)[1]
-			y3 = rotateY(x3,z3,self.rotDY)[2]
+			z3 = rotateY(x3,z3,self.rotDY)[2]
 			
 			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
 			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
@@ -205,10 +205,10 @@ function modelClass:drawFaces()
 			
 			local x4 = self.vertices[v4][1]*50
 			local y4 = self.vertices[v4][2]*50
-			local z4 = self.vertices[v4][3]/5
+			local z4 = self.vertices[v4][3]/2
 			
-			x4 = rotateY(x3,z3,self.rotDY)[1]
-			y4 = rotateY(x3,z3,self.rotDY)[2]
+			x4 = rotateY(x4,z4,self.rotDY)[1]
+			z4 = rotateY(x4,z4,self.rotDY)[2]
 			
 			local xyz4 = toWorldSpace(self.x,self.y,self.z,x4,y4,z4)
 			xyz4 = toCamSpace(xyz4[1],xyz4[2],xyz4[3])
@@ -229,10 +229,11 @@ function modelClass:drawVertices()
 	for _,v in ipairs(self.vertices) do
 		local x = v[1]*50
 		local y = v[2]*50
-		local z = v[3]/5
+		local z = v[3]/2
 		
-		x = rotateY(x,z,self.rotY)[1]
-		y = rotateY(x,z,self.rotY)[2]
+		local xz = rotateY(x,z,self.rotY)
+		x = xz[1]
+		z = xz[2]
 		
 		local xyz = toWorldSpace(self.x,self.y,self.z,x,y,z)
 		xyz = toCamSpace(xyz[1],xyz[2],xyz[3])
@@ -246,6 +247,7 @@ function modelClass:drawVertices()
 		
 		love.graphics.setColor(255,0,0)
 		love.graphics.rectangle("fill",sx,sy,10/v[4],10/v[4])
+		love.graphics.print("["..x.."; "..y.."; "..z.."]",sx,sy)
 	end
 end
 
@@ -337,17 +339,17 @@ end
 
 function rotateX(y,z,r)
 	local sy = y/50
-	local sz = z*5
+	local sz = z*2
 	local ry = (sy*math.cos(r) - sz*math.sin(r))*50
-	local rz = (sz*math.cos(r) - sy*math.sin(r))/5
+	local rz = (sz*math.cos(r) - sy*math.sin(r))/2
 	return {ry,rz}
 end
 
 function rotateY(x,z,r)
 	local sx = x/50
-	local sz = z*5
+	local sz = z*2
 	local rx = (sx*math.cos(r) - sz*math.sin(r))*50
-	local rz = (sz*math.cos(r) - sx*math.sin(r))/5
+	local rz = (sz*math.cos(r) - sx*math.sin(r))/2
 	return {rx,rz}
 end
 

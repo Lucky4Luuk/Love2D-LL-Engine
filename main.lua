@@ -85,7 +85,23 @@ function modelClass:load()
 		end
 	end
 	
+	for _,f in ipairs(self.faces) do
+		local v1 = tonumber(splitstring(f[1],"//")[1])
+		local v2 = tonumber(splitstring(f[2],"//")[1])
+		local v3 = tonumber(splitstring(f[3],"//")[1])
+		
+		f[4] = {self.vertices[v1][1],self.vertices[v1][2],self.vertices[v1][3]}
+		f[5] = {self.vertices[v2][1],self.vertices[v2][2],self.vertices[v2][3]}
+		f[6] = {self.vertices[v3][1],self.vertices[v3][2],self.vertices[v3][3]}
+		--f[7] = math.sqrt((f[4][1]*f[4][1]+f[4][2]*f[4][2]+f[4][3]*f[4][3]+f[5][1]*f[5][1]+f[5][2]*f[5][2]+f[5][3]*f[5][3]+f[6][1]*f[6][1]+f[6][2]*f[6][2]+f[6][3]*f[6][3])/9)
+		local cx = (f[4][1]+f[5][1]+f[6][1])/3
+		local cy = (f[4][2]+f[5][2]+f[6][2])/3
+		local cz = (f[4][3]+f[5][3]+f[6][3])/3
+		f[7] = math.sqrt(cx*cx+cy*cy+cz*cz)
+	end
+	
 	table.sort(self.vertices,cDistToCam)
+	table.sort(self.faces,cDistToCamF)
 	--for _,v in ipairs(self.vertices) do
 		--print(v[4])
 	--end
@@ -114,137 +130,59 @@ end
 
 function modelClass:drawFaces()
 	for _,f in ipairs(self.faces) do
-		local v1 = tonumber(splitstring(f[1],"//")[1])
-		local v2 = tonumber(splitstring(f[2],"//")[1])
-		local v3 = tonumber(splitstring(f[3],"//")[1])
-		local v4 = tonumber(splitstring(f[4],"//")[1])
+		local x1 = tonumber(f[4][1])*50
+		local y1 = tonumber(f[4][2])*50
+		local z1 = tonumber(f[4][3])/zfactor
 		
-		if v4 == nil then
-			local x1 = self.vertices[v1][1]*50
-			local y1 = self.vertices[v1][2]*50
-			local z1 = self.vertices[v1][3]/zfactor
-			
-			local xz1 = rotateY(x1,z1,self.rotY)
-			x1 = xz1[1]
-			z1 = xz1[2]
-			
-			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
-			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
-			x1 = xyz1[1]
-			y1 = xyz1[2]
-			z1 = xyz1[3]
-			
-			local sx1 = x1/z1 + WIDTH/2
-			local sy1 = y1/z1 + HEIGHT/2
-			
-			local x2 = self.vertices[v2][1]*50
-			local y2 = self.vertices[v2][2]*50
-			local z2 = self.vertices[v2][3]/zfactor
-			
-			local xz2 = rotateY(x2,z2,self.rotY)
-			x2 = xz2[1]
-			z2 = xz2[2]
-			
-			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
-			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
-			x2 = xyz2[1]
-			y2 = xyz2[2]
-			z2 = xyz2[3]
-			
-			local sx2 = x2/z2 + WIDTH/2
-			local sy2 = y2/z2 + HEIGHT/2
-			
-			local x3 = self.vertices[v3][1]*50
-			local y3 = self.vertices[v3][2]*50
-			local z3 = self.vertices[v3][3]/zfactor
-			
-			local xz3 = rotateY(x3,z3,self.rotY)
-			x3 = xz3[1]
-			z3 = xz3[2]
-			
-			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
-			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
-			x3 = xyz3[1]
-			y3 = xyz3[2]
-			z3 = xyz3[3]
-			
-			local sx3 = x3/z3 + WIDTH/2
-			local sy3 = y3/z3 + HEIGHT/2
-			
-			love.graphics.setColor(255,0,0)
-			love.graphics.polygon("fill",sx1,sy1,sx2,sy2,sx3,sy3)
-		else
-			local x1 = self.vertices[v1][1]*50
-			local y1 = self.vertices[v1][2]*50
-			local z1 = self.vertices[v1][3]/zfactor
-			
-			local xz1 = rotateY(x1,z1,self.rotY)
-			x1 = xz1[1]
-			z1 = xz1[2]
-			
-			local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
-			xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
-			x1 = xyz1[1]
-			y1 = xyz1[2]
-			z1 = xyz1[3]
-			
-			local sx1 = x1/z1 + WIDTH/2
-			local sy1 = y1/z1 + HEIGHT/2
-			
-			local x2 = self.vertices[v2][1]*50
-			local y2 = self.vertices[v2][2]*50
-			local z2 = self.vertices[v2][3]/zfactor
-			
-			local xz2 = rotateY(x2,z2,self.rotY)
-			x2 = xz2[1]
-			z2 = xz2[2]
-			
-			local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
-			xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
-			x2 = xyz2[1]
-			y2 = xyz2[2]
-			z2 = xyz2[3]
-			
-			local sx2 = x2/z2 + WIDTH/2
-			local sy2 = y2/z2 + HEIGHT/2
-			
-			local x3 = self.vertices[v3][1]*50
-			local y3 = self.vertices[v3][2]*50
-			local z3 = self.vertices[v3][3]/zfactor
-			
-			local xz3 = rotateY(x3,z3,self.rotY)
-			x3 = xz3[1]
-			z3 = xz3[2]
-			
-			local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
-			xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
-			x3 = xyz3[1]
-			y3 = xyz3[2]
-			z3 = xyz3[3]
-			
-			local sx3 = x3/z3 + WIDTH/2
-			local sy3 = y3/z3 + HEIGHT/2
-			
-			local x4 = self.vertices[v4][1]*50
-			local y4 = self.vertices[v4][2]*50
-			local z4 = self.vertices[v4][3]/zfactor
-			
-			local xz4 = rotateY(x3,z3,self.rotY)
-			x4 = xz4[1]
-			z4 = xz4[2]
-			
-			local xyz4 = toWorldSpace(self.x,self.y,self.z,x4,y4,z4)
-			xyz4 = toCamSpace(xyz4[1],xyz4[2],xyz4[3])
-			x4 = xyz4[1]
-			y4 = xyz4[2]
-			z4 = xyz4[3]
-			
-			local sx4 = x4/z4 + WIDTH/2
-			local sy4 = y4/z4 + HEIGHT/2
-			
-			love.graphics.setColor(255,0,0)
-			love.graphics.polygon("fill",sx1,sy1,sx2,sy2,sx3,sy3,sx4,sy4)
-		end
+		local xz1 = rotateY(x1,z1,self.rotY)
+		x1 = xz1[1]
+		z1 = xz1[2]
+		
+		local xyz1 = toWorldSpace(self.x,self.y,self.z,x1,y1,z1)
+		xyz1 = toCamSpace(xyz1[1],xyz1[2],xyz1[3])
+		x1 = xyz1[1]
+		y1 = xyz1[2]
+		z1 = xyz1[3]
+		
+		local sx1 = x1/z1 + WIDTH/2
+		local sy1 = y1/z1 + HEIGHT/2
+		
+		local x2 = tonumber(f[5][1])*50
+		local y2 = tonumber(f[5][2])*50
+		local z2 = tonumber(f[5][3])/zfactor
+		
+		local xz2 = rotateY(x2,z2,self.rotY)
+		x2 = xz2[1]
+		z2 = xz2[2]
+		
+		local xyz2 = toWorldSpace(self.x,self.y,self.z,x2,y2,z2)
+		xyz2 = toCamSpace(xyz2[1],xyz2[2],xyz2[3])
+		x2 = xyz2[1]
+		y2 = xyz2[2]
+		z2 = xyz2[3]
+		
+		local sx2 = x2/z2 + WIDTH/2
+		local sy2 = y2/z2 + HEIGHT/2
+		
+		local x3 = tonumber(f[6][1])*50
+		local y3 = tonumber(f[6][2])*50
+		local z3 = tonumber(f[6][3])/zfactor
+		
+		local xz3 = rotateY(x3,z3,self.rotY)
+		x3 = xz3[1]
+		z3 = xz3[2]
+		
+		local xyz3 = toWorldSpace(self.x,self.y,self.z,x3,y3,z3)
+		xyz3 = toCamSpace(xyz3[1],xyz3[2],xyz3[3])
+		x3 = xyz3[1]
+		y3 = xyz3[2]
+		z3 = xyz3[3]
+		
+		local sx3 = x3/z3 + WIDTH/2
+		local sy3 = y3/z3 + HEIGHT/2
+		
+		love.graphics.setColor(math.clamp(f[7],0,255),0,255-math.clamp(f[7],0,255))
+		love.graphics.polygon("fill",sx1,sy1,sx2,sy2,sx3,sy3)
 	end
 end
 
@@ -278,6 +216,11 @@ function modelClass:drawVertices()
 end
 
 --Functions
+-- Clamps a number to within a certain range, with optional rounding
+function math.clamp(n, low, high)
+	return math.min(math.max(n, low), high)
+end
+
 function moveCamForward(speed)
 	CAMX = CAMX + math.sin(CAMROTY) * (speed*5)
 	CAMZ = CAMZ + math.cos(CAMROTY) * (speed/50)
@@ -324,6 +267,10 @@ end
 
 function cDistToCam(a,b)
 	return a[4] > b[4]
+end
+
+function cDistToCamF(a,b)
+	return a[7] > b[7]
 end
 
 function splitstring(inputstr, sep)
@@ -447,10 +394,11 @@ function playerinput()
 end
 
 --Love2D functions (plus some more, like loading some models and such)
-local modeltest = modelClass.new(0,-1,3,"cube.obj")
+local modeltest = modelClass.new(0,-1,3,"monkeyblender.obj")
 
 function love.load()
 	modeltest:load()
+	shader = love.graphics.newShader("shaders/fragment.fs","shaders/vertex.vs")
 	--modeltest:drawFaces()
 end
 
@@ -471,6 +419,6 @@ function love.draw()
 	--Debug
 	love.graphics.setColor(255,255,255)
 	love.graphics.print("Camera position: "..CAMX.."; "..CAMY.."; "..CAMZ..";",10,10)
-	love.graphics.print("Camera rotation: "..CAMROTX.."; "..CAMROTY.."; "..CAMROTZ..";",10,40)
+	love.graphics.print("Camera rotation: "..math.deg(CAMROTX).."; "..math.deg(CAMROTY).."; "..math.deg(CAMROTZ)..";",10,40)
 	love.graphics.print("FPS: "..tostring(love.timer.getFPS()),WIDTH-60,10)
 end
